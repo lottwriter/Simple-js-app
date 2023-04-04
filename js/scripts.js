@@ -12,15 +12,33 @@ return {
     },
     getAll: function() {
         return pokemonList;
+    },
+    addListItem: function(pokemon){
+        
+            //document.write(`${pokemon.name} (height: ${pokemon.height}) `); //Adds pokemon names and height to the DOM in the form of text
+            // if (pokemon.height > 5) {
+            //     document.write(" - Tall fella. ")
+            // }
+            let pokeList = document.querySelector('ul');
+            let listItem = document.createElement('li');
+            let button = document.createElement('button')
+            button.innerText = `${pokemon.name}`
+            button.classList.add('pokeButton')
+            listItem.appendChild(button);
+            pokeList.appendChild(listItem);
+            button.addEventListener('click', function() {
+                showDetails(pokemon);
+            });
+
+    },
+    showDetails: function(pokemon){
+        console.log(pokemon);
     }
 }
 
 })();
-//return pokemonRepository.getAll()
 
+//return pokemonRepository.getAll()
 pokemonRepository.getAll().forEach(function(pokemon){
-    document.write(`${pokemon.name} (height: ${pokemon.height}) `); //Adds pokemon names and height to the DOM in the form of text
-    if (pokemon.height > 5) {
-        document.write(" - Tall fella. ")
-    }
+    pokemonRepository.addListItem(pokemon);
 })
