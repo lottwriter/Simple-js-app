@@ -1,15 +1,46 @@
 let pokemonRepository = (function(){
-    let pokemonList = [
-        {name: 'Hitmonchan', height: 7, types: ['fighting']},
-        {name: 'Emolga', height: 3, types: ['electric', 'flying']}, 
-        {name: 'Lucario', height: 7, types: ['fighting', 'steel']}
-    ];
+    let pokemonList = [];
+  let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
+function add(pokemon) {
+    pokemonList.push(pokemon);
+}
 
+  function loadList() {
+    return fetch(apiUrl).then(function (response) {
+      return response.json();
+    }).then(function (json) {
+      json.results.forEach(function (item) {
+        let pokemon = {
+          name: item.name,
+          detailsUrl: item.url
+        };
+        add(pokemon);
+      });
+    }).catch(function (e) {
+      console.error(e);
+    })
+  }
+  function loadDetails(item) {
+    let url = item.detailsUrl;
+    return fetch(url).then(function (response) {
+      return response.json();
+    }).then(function (details) {
+      // Now we add the details to the item
+      item.imageUrl = details.sprites.front_default;
+      item.height = details.height;
+      item.types = details.types;
+    }).catch(function (e) {
+      console.error(e);
+    });
+  }
+  function showDetails(pokemon) {
+        loadDetails(pokemon).then(function () {
+          console.log(pokemon);
+        });
+      }
 return {
-    add: function(pokemon) {
-        pokemonList.push(pokemon);
-    },
+    add: add,
     getAll: function() {
         return pokemonList;
     },
@@ -32,9 +63,10 @@ return {
             });
 
     },
-    showDetails: function(pokemon){
-        console.log(pokemon);
-    }
+    
+    loadList: loadList,
+    loadDetails: loadDetails,
+    showDetails: showDetails
 }
 
 })();
@@ -43,3 +75,10 @@ return {
 pokemonRepository.getAll().forEach(function(pokemon){
     pokemonRepository.addListItem(pokemon);
 })
+
+pokemonRepository.loadList().then(function() {
+    // Now the data is loaded!
+    pokemonRepository.getAll().forEach(function(pokemon){
+      pokemonRepository.addListItem(pokemon);
+    });
+  });
