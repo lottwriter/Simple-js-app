@@ -19,6 +19,7 @@ return {
             // if (pokemon.height > 5) {
             //     document.write(" - Tall fella. ")
             // }
+            const self = this;
             let pokeList = document.querySelector('ul');
             let listItem = document.createElement('li');
             let button = document.createElement('button')
@@ -27,7 +28,7 @@ return {
             listItem.appendChild(button);
             pokeList.appendChild(listItem);
             button.addEventListener('click', function() {
-                showDetails(pokemon);
+                self.showDetails(pokemon);
             });
 
     },
